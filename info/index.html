@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinamotoSoft - Управление Telegram аккаунтами</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-bg: #0a0a0a;
@@ -15,6 +18,7 @@
             --card-bg: rgba(30, 35, 50, 0.6);
             --card-border: rgba(100, 255, 218, 0.2);
             --transition: all 0.3s ease;
+            --header-height: 80px;
         }
 
         * {
@@ -31,25 +35,105 @@
             overflow-x: hidden;
         }
 
+        /* Навигация */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
+        /* Основной контент */
+        main {
+            padding-top: var(--header-height);
+        }
+
         header {
-            padding: 40px 0;
+            padding: 80px 0 40px;
             text-align: center;
         }
 
         .logo {
-            font-size: 3rem;
+            font-size: 4rem;
             color: var(--accent-color);
             margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 20px;
             background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
             -webkit-background-clip: text;
@@ -64,6 +148,7 @@
             color: #a0ffe7;
         }
 
+        /* Особенности */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -78,11 +163,30 @@
             border: 1px solid var(--card-border);
             transition: var(--transition);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 40px rgba(100, 255, 218, 0.3);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
 
         .feature-icon {
@@ -115,6 +219,12 @@
             background: rgba(40, 45, 60, 0.6);
             padding: 10px 20px;
             border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .status-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .status-color {
@@ -128,12 +238,26 @@
         .yellow { background: #ffcc00; }
         .red { background: #ff3b3b; }
 
-        .cta-section {
+        /* Секции призыва к действию */
+        .cta-section, .contact-section {
             text-align: center;
             padding: 60px 0;
             background: rgba(20, 25, 40, 0.4);
             border-radius: 14px;
             margin: 50px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before, .contact-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(93, 255, 203, 0.1), transparent 70%);
+            pointer-events: none;
         }
 
         .btn {
@@ -146,6 +270,22 @@
             font-weight: bold;
             margin-top: 20px;
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #00c0a3, #00e6b8);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
         }
 
         .btn:hover {
@@ -153,12 +293,8 @@
             box-shadow: 0 7px 20px rgba(0, 230, 184, 0.4);
         }
 
-        .contact-section {
-            text-align: center;
-            padding: 60px 0;
-            background: rgba(20, 25, 40, 0.4);
-            border-radius: 14px;
-            margin: 50px 0;
+        .btn:hover::before {
+            opacity: 1;
         }
 
         .telegram-contact {
@@ -172,6 +308,22 @@
             font-weight: bold;
             margin-top: 20px;
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .telegram-contact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #00a8e8, #0088cc);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
         }
 
         .telegram-contact:hover {
@@ -179,29 +331,41 @@
             box-shadow: 0 7px 20px rgba(0, 136, 204, 0.4);
         }
 
+        .telegram-contact:hover::before {
+            opacity: 1;
+        }
+
         .telegram-icon {
             font-size: 1.5rem;
             margin-right: 10px;
         }
 
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            color: #a0ffe7;
-            border-top: 1px solid var(--card-border);
-            margin-top: 60px;
-        }
-
-        /* Новые стили для раздела Модули */
+        /* Модули */
         .modules-section {
             margin: 50px 0;
         }
 
         .modules-section h2 {
             text-align: center;
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 40px;
             color: var(--accent-light);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .modules-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+            border-radius: 3px;
         }
 
         .modules-grid {
@@ -216,11 +380,29 @@
             padding: 25px;
             border: 1px solid var(--card-border);
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(93, 255, 203, 0.1), transparent);
+            opacity: 0;
+            transition: var(--transition);
         }
 
         .module-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(100, 255, 218, 0.2);
+        }
+
+        .module-card:hover::before {
+            opacity: 1;
         }
 
         .module-name {
@@ -241,6 +423,56 @@
             font-size: 0.95rem;
         }
 
+        /* Футер */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #a0ffe7;
+            border-top: 1px solid var(--card-border);
+            margin-top: 60px;
+            background: rgba(10, 10, 10, 0.7);
+        }
+
+        /* Анимации появления при скролле */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: var(--header-height);
+                left: 0;
+                width: 100%;
+                background: rgba(10, 10, 10, 0.95);
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+                border-top: 1px solid var(--card-border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .features, .modules-grid {
                 grid-template-columns: 1fr;
@@ -250,198 +482,289 @@
                 font-size: 2rem;
             }
 
-            .modules-grid {
-                grid-template-columns: 1fr;
+            .logo {
+                font-size: 3rem;
+            }
+
+            .navbar {
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .modules-section h2 {
+                font-size: 2rem;
+            }
+
+            .module-card, .feature-card {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-server"></i>
-            </div>
-            <h1>MinamotoSoft</h1>
-            <p class="subtitle">
-                Мощный инструмент для управления множеством Telegram аккаунтов.
-                Простой интерфейс, продвинутые возможности - идеальное решение как для новичков, так и для опытных пользователей.
-            </p>
-        </header>
+    <nav class="navbar">
+        <a href="#" class="nav-logo">
+            <i class="fas fa-server"></i>
+            MinamotoSoft
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="#features" class="nav-link">Возможности</a>
+            <a href="#modules" class="nav-link">Модули</a>
+            <a href="#contact" class="nav-link">Контакты</a>
+        </div>
+        <button class="mobile-menu-btn" id="menuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
 
-        <section class="features">
-            <div class="feature-card">
-                <div class="feature-icon">
+    <main>
+        <div class="container">
+            <header>
+                <div class="logo">
                     <i class="fas fa-server"></i>
                 </div>
-                <h3 class="feature-title">Аккаунты</h3>
-                <p class="feature-description">
-                    Просматривайте все ваши Telegram аккаунты в одном месте. Система цветовых индикаторов сразу покажет статус каждого аккаунта:
+                <h1>MinamotoSoft</h1>
+                <p class="subtitle">
+                    Мощный инструмент для управления множеством Telegram аккаунтов.
+                    Простой интерфейс, продвинутые возможности - идеальное решение как для новичков, так и для опытных пользователей.
                 </p>
-                <div class="status-examples">
-                    <div class="status-item">
-                        <div class="status-color green"></div>
-                        <span>Активные</span>
+            </header>
+
+            <section class="features" id="features">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-server"></i>
                     </div>
-                    <div class="status-item">
-                        <div class="status-color yellow"></div>
-                        <span>Проблемные</span>
+                    <h3 class="feature-title">Аккаунты</h3>
+                    <p class="feature-description">
+                        Просматривайте все ваши Telegram аккаунты в одном месте. Система цветовых индикаторов сразу покажет статус каждого аккаунта:
+                    </p>
+                    <div class="status-examples">
+                        <div class="status-item">
+                            <div class="status-color green"></div>
+                            <span>Активные</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-color yellow"></div>
+                            <span>Проблемные</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-color red"></div>
+                            <span>Заблокированные</span>
+                        </div>
                     </div>
-                    <div class="status-item">
-                        <div class="status-color red"></div>
-                        <span>Заблокированные</span>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Управление аккаунтами</h3>
+                    <p class="feature-description">
+                        Полный контроль над вашими аккаунтами: изменение имени, настройка приватности, управление подписками.
+                        Следите за количеством каналов и избегайте ограничений.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h3 class="feature-title">Добавление аккаунтов</h3>
+                    <p class="feature-description">
+                        Простое добавление новых аккаунтов через QR-код или код подтверждения.
+                        Также поддерживается импорт существующих сессий.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                    <h3 class="feature-title">Входящие сообщения</h3>
+                    <p class="feature-description">
+                        Централизованный просмотр всех входящих сообщений со всех аккаунтов.
+                        Быстро отвечайте и управляйте чатами без переключения между аккаунтами.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <h3 class="feature-title">Системные логи</h3>
+                    <p class="feature-description">
+                        Детальные логи работы системы помогают отслеживать все процессы и вовремя обнаруживать проблемы.
+                        В реальном времени видите что происходит с вашими аккаунтами.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="feature-title">Модули</h3>
+                    <p class="feature-description">
+                        Расширяйте функциональность с помощью модулей.
+                        Автоматизируйте рутинные задачи, используйте готовые решения для популярных сценариев.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3 class="feature-title">Баланс</h3>
+                    <p class="feature-description">
+                        Отслеживайте баланс ваших аккаунтов в @CryptoBot.
+                        Вся информация о ваших финансах в одном месте с удобной статистикой.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Раздел Модули -->
+            <section class="modules-section" id="modules">
+                <h2><i class="fas fa-puzzle-piece"></i> Встроенные модули</h2>
+                <div class="modules-grid">
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-user-plus module-icon"></i> Subscribe</h3>
+                        <p class="module-description">Автоматическая подписка на каналы и группы. Позволяет массово подписываться на указанные ресурсы для расширения охвата.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-user-minus module-icon"></i> Unsubscribe</h3>
+                        <p class="module-description">Автоматическая отписка от каналов и групп. Полезен для очистки аккаунтов от ненужных подписок и избежания ограничений.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-user-friends module-icon"></i> Referrals (best random contest Captcha + all bots)</h3>
+                        <p class="module-description">Модуль для работы с реферальными программами. Автоматически решает капчи и участвует во всех конкурсах в ботах для привлечения рефералов.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-mouse module-icon"></i> Run button нажатие кнопки в каналах</h3>
+                        <p class="module-description">Автоматическое нажатие заданных кнопок в сообщениях каналов. Используется для участия в конкурсах и активации различных функций ботов.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-share-alt module-icon"></i> Giveshare (участие в боте)</h3>
+                        <p class="module-description">Модуль для автоматического участия в розыгрышах и конкурсах через бот @GiveshareBot. Упрощает процесс участия и увеличивает шансы на победу.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-random module-icon"></i> Random1ze (участие в боте)</h3>
+                        <p class="module-description">Автоматическое участие в конкурсах через бот @Random1zeBot. Поддерживает различные типы заданий для участия в розыгрышах.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-link module-icon"></i> Telecombine (участие в боте)</h3>
+                        <p class="module-description">Модуль для работы с ботом @TelecombineBot. Позволяет автоматически выполнять задания и участвовать в партнерских программах.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-receipt module-icon"></i> Cryptobot checks</h3>
+                        <p class="module-description">Модуль для работы с чеками @CryptoBot. Автоматически активирует чеки, позволяя быстро получать криптовалютные вознаграждения.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-signal module-icon"></i> Ping</h3>
+                        <p class="module-description">Модуль для проверки активности аккаунтов. Позволяет отправлять тестовые сообщения для поддержания онлайн-статуса и проверки работоспособности аккаунтов.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fas fa-star module-icon"></i> Stars</h3>
+                        <p class="module-description">Модуль для работы с Telegram Stars. Позволяет автоматизировать процессы, связанные с покупкой, продажей и использованием звезд.</p>
+                    </div>
+
+                    <div class="module-card fade-in">
+                        <h3 class="module-name"><i class="fab fa-python module-icon"></i> e (python code for telegram)</h3>
+                        <p class="module-description">Модуль для выполнения пользовательского Python-кода. Позволяет создавать собственные скрипты и автоматизации прямо внутри программы.</p>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3 class="feature-title">Управление аккаунтами</h3>
-                <p class="feature-description">
-                    Полный контроль над вашими аккаунтами: изменение имени, настройка приватности, управление подписками.
-                    Следите за количеством каналов и избегайте ограничений.
-                </p>
-            </div>
+            <section class="cta-section fade-in">
+                <h2>Начните использовать MinamotoSoft уже сегодня</h2>
+                <p>Простая установка, интуитивный интерфейс и мощные возможности</p>
+                <a href="#contact" class="btn">Получить доступ</a>
+            </section>
 
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-plus-circle"></i>
-                </div>
-                <h3 class="feature-title">Добавление аккаунтов</h3>
-                <p class="feature-description">
-                    Простое добавление новых аккаунтов через QR-код или код подтверждения.
-                    Также поддерживается импорт существующих сессий.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-inbox"></i>
-                </div>
-                <h3 class="feature-title">Входящие сообщения</h3>
-                <p class="feature-description">
-                    Централизованный просмотр всех входящих сообщений со всех аккаунтов.
-                    Быстро отвечайте и управляйте чатами без переключения между аккаунтами.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-terminal"></i>
-                </div>
-                <h3 class="feature-title">Системные логи</h3>
-                <p class="feature-description">
-                    Детальные логи работы системы помогают отслеживать все процессы и вовремя обнаруживать проблемы.
-                    В реальном времени видите что происходит с вашими аккаунтами.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-cogs"></i>
-                </div>
-                <h3 class="feature-title">Модули</h3>
-                <p class="feature-description">
-                    Расширяйте функциональность с помощью модулей.
-                    Автоматизируйте рутинные задачи, используйте готовые решения для популярных сценариев.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-wallet"></i>
-                </div>
-                <h3 class="feature-title">Баланс</h3>
-                <p class="feature-description">
-                    Отслеживайте баланс ваших аккаунтов в @CryptoBot.
-                    Вся информация о ваших финансах в одном месте с удобной статистикой.
-                </p>
-            </div>
-        </section>
-
-        <!-- Новый раздел Модули -->
-        <section class="modules-section">
-            <h2><i class="fas fa-puzzle-piece"></i> Встроенные модули</h2>
-            <div class="modules-grid">
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-user-plus module-icon"></i> Subscribe</h3>
-                    <p class="module-description">Автоматическая подписка на каналы и группы. Позволяет массово подписываться на указанные ресурсы для расширения охвата.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-user-minus module-icon"></i> Unsubscribe</h3>
-                    <p class="module-description">Автоматическая отписка от каналов и групп. Полезен для очистки аккаунтов от ненужных подписок и избежания ограничений.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-user-friends module-icon"></i> Referrals (best random contest Captcha + all bots)</h3>
-                    <p class="module-description">Модуль для работы с реферальными программами. Автоматически решает капчи и участвует во всех конкурсах в ботах для привлечения рефералов.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-mouse module-icon"></i> Run button нажатие кнопки в каналах</h3>
-                    <p class="module-description">Автоматическое нажатие заданных кнопок в сообщениях каналов. Используется для участия в конкурсах и активации различных функций ботов.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-share-alt module-icon"></i> Giveshare (участие в боте)</h3>
-                    <p class="module-description">Модуль для автоматического участия в розыгрышах и конкурсах через бот @GiveshareBot. Упрощает процесс участия и увеличивает шансы на победу.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-random module-icon"></i> Random1ze (участие в боте)</h3>
-                    <p class="module-description">Автоматическое участие в конкурсах через бот @Random1zeBot. Поддерживает различные типы заданий для участия в розыгрышах.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-link module-icon"></i> Telecombine (участие в боте)</h3>
-                    <p class="module-description">Модуль для работы с ботом @TelecombineBot. Позволяет автоматически выполнять задания и участвовать в партнерских программах.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-receipt module-icon"></i> Cryptobot checks</h3>
-                    <p class="module-description">Модуль для работы с чеками @CryptoBot. Автоматически активирует чеки, позволяя быстро получать криптовалютные вознаграждения.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-signal module-icon"></i> Ping</h3>
-                    <p class="module-description">Модуль для проверки активности аккаунтов. Позволяет отправлять тестовые сообщения для поддержания онлайн-статуса и проверки работоспособности аккаунтов.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fas fa-star module-icon"></i> Stars</h3>
-                    <p class="module-description">Модуль для работы с Telegram Stars. Позволяет автоматизировать процессы, связанные с покупкой, продажей и использованием звезд.</p>
-                </div>
-
-                <div class="module-card">
-                    <h3 class="module-name"><i class="fab fa-python module-icon"></i> e (python code for telegram)</h3>
-                    <p class="module-description">Модуль для выполнения пользовательского Python-кода. Позволяет создавать собственные скрипты и автоматизации прямо внутри программы.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="cta-section">
-            <h2>Начните использовать MinamotoSoft уже сегодня</h2>
-            <p>Простая установка, интуитивный интерфейс и мощные возможности</p>
-        </section>
-
-        <section class="contact-section">
-            <h2>Как получить программу?</h2>
-            <p>Для получения доступа к программе напишите в Telegram:</p>
-            <a href="https://t.me/maximka_samurai" class="telegram-contact" target="_blank">
-                <i class="fab fa-telegram-plane telegram-icon"></i>
-                @maximka_samurai
-            </a>
-            <p style="margin-top: 20px;">Наш специалист ответит на все ваши вопросы и предоставит доступ к программе</p>
-        </section>
-    </div>
+            <section class="contact-section fade-in" id="contact">
+                <h2>Как получить программу?</h2>
+                <p>Для получения доступа к программе напишите в Telegram:</p>
+                <a href="https://t.me/maximka_samurai" class="telegram-contact" target="_blank">
+                    <i class="fab fa-telegram-plane telegram-icon"></i>
+                    @maximka_samurai
+                </a>
+                <p style="margin-top: 20px;">Наш специалист ответит на все ваши вопросы и предоставит доступ к программе</p>
+            </section>
+        </div>
+    </main>
 
     <footer>
         <div class="container">
             <p>© 2023 MinamotoSoft. Все права защищены.</p>
         </div>
     </footer>
+
+    <script>
+        // Мобильное меню
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuBtn.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Плавная прокрутка для навигационных ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Закрываем мобильное меню если открыто
+                    navLinks.classList.remove('active');
+                    menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Анимация появления элементов при скролле
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        fadeElements.forEach(element => {
+            observer.observe(element);
+        });
+    </script>
 </body>
 </html>
